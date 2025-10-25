@@ -1,0 +1,114 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/data_ingestion.py
+    deps:
+    - path: data/house_data.csv
+      hash: md5
+      md5: 4d8c8450f1a68b4627311bdf13b5f520
+      size: 363
+    - path: src/data_ingestion.py
+      hash: md5
+      md5: 0d2a6bc6606682d684648bfaa5ed666e
+      size: 615
+    outs:
+    - path: artifacts/processed_data.csv
+      hash: md5
+      md5: 4d8c8450f1a68b4627311bdf13b5f520
+      size: 363
+  preprocessing:
+    cmd: python src/preprocessing.py
+    deps:
+    - path: artifacts/processed_data.csv
+      hash: md5
+      md5: 4d8c8450f1a68b4627311bdf13b5f520
+      size: 363
+    - path: src/preprocessing.py
+      hash: md5
+      md5: da81404c757e864264f37c4c551c1ef3
+      size: 942
+    outs:
+    - path: artifacts/test.csv
+      hash: md5
+      md5: aaff5629207844379cf64ea9654cf478
+      size: 111
+    - path: artifacts/train.csv
+      hash: md5
+      md5: 766c497d86c844071667f30c0f5dbc6f
+      size: 300
+  feature_engineering:
+    cmd: python src/feature_engineering.py
+    deps:
+    - path: artifacts/test.csv
+      hash: md5
+      md5: aaff5629207844379cf64ea9654cf478
+      size: 111
+    - path: artifacts/train.csv
+      hash: md5
+      md5: 766c497d86c844071667f30c0f5dbc6f
+      size: 300
+    - path: src/feature_engineering.py
+      hash: md5
+      md5: 3f180ae230ed67225aa1750ca7e3c29d
+      size: 1118
+    outs:
+    - path: artifacts/X_test.csv
+      hash: md5
+      md5: 670a85c576c47c42464a00126f945569
+      size: 93
+    - path: artifacts/X_train.csv
+      hash: md5
+      md5: c4841e9378335efb85dcdaa5798b402d
+      size: 246
+    - path: artifacts/y_test.csv
+      hash: md5
+      md5: b3c2d41e667d250020580762ac877006
+      size: 22
+    - path: artifacts/y_train.csv
+      hash: md5
+      md5: 5654144021da4ab0640e460f1015c78f
+      size: 67
+  model_training:
+    cmd: python src/model_training.py
+    deps:
+    - path: artifacts/X_train.csv
+      hash: md5
+      md5: c4841e9378335efb85dcdaa5798b402d
+      size: 246
+    - path: artifacts/y_train.csv
+      hash: md5
+      md5: 5654144021da4ab0640e460f1015c78f
+      size: 67
+    - path: mlflow_tracking/
+      hash: md5
+      md5: e206527ad912976d0d49b7231334ba0a.dir
+      size: 598304
+      nfiles: 229
+    - path: params.yaml
+      hash: md5
+      md5: 686942c8373c9700d7252f3f91f3db07
+      size: 298
+    - path: src/model_training.py
+      hash: md5
+      md5: af237f0beaa58bb5b1a58c4e7bd38767
+      size: 2754
+  model_evaluation:
+    cmd: python src/model_evaluation.py
+    deps:
+    - path: artifacts/X_test.csv
+      hash: md5
+      md5: 670a85c576c47c42464a00126f945569
+      size: 93
+    - path: artifacts/y_test.csv
+      hash: md5
+      md5: b3c2d41e667d250020580762ac877006
+      size: 22
+    - path: mlflow_tracking/
+      hash: md5
+      md5: e206527ad912976d0d49b7231334ba0a.dir
+      size: 598304
+      nfiles: 229
+    - path: src/model_evaluation.py
+      hash: md5
+      md5: 21bf6b68fe12ef61e987053ee2d5fa1c
+      size: 1146

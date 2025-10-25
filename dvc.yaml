@@ -1,0 +1,48 @@
+stages:
+  data_ingestion:
+    cmd: python src/data_ingestion.py
+    deps:
+      - data/house_data.csv
+      - src/data_ingestion.py
+    outs:
+      - artifacts/processed_data.csv
+
+  preprocessing:
+    cmd: python src/preprocessing.py
+    deps:
+      - artifacts/processed_data.csv
+      - src/preprocessing.py
+    outs:
+      - artifacts/train.csv
+      - artifacts/test.csv
+
+  feature_engineering:
+    cmd: python src/feature_engineering.py
+    deps:
+      - artifacts/train.csv
+      - artifacts/test.csv
+      - src/feature_engineering.py
+    outs:
+      - artifacts/X_train.csv
+      - artifacts/y_train.csv
+      - artifacts/X_test.csv
+      - artifacts/y_test.csv
+
+  model_training:
+    cmd: python src/model_training.py
+    deps:
+      - artifacts/X_train.csv
+      - artifacts/y_train.csv
+      - src/model_training.py
+      - params.yaml
+      - mlflow_tracking/   # dependency only, folder must exist before run
+    # no outs: for MLflow
+
+  model_evaluation:
+    cmd: python src/model_evaluation.py
+    deps:
+      - artifacts/X_test.csv
+      - artifacts/y_test.csv
+      - src/model_evaluation.py
+      - mlflow_tracking/   # dependency
+    # no outs: for MLflow

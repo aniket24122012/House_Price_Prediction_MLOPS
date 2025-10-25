@@ -1,0 +1,16 @@
+data_ingestion:
+  raw_data_path: "data/house_data.csv"
+
+preprocessing:
+  test_size: 0.2
+  random_state: 42
+
+feature_engineering:
+  target_col: "Price"
+
+model_training:
+  random_state: 42
+  param_grid:
+    n_estimators: [50, 100]
+    max_depth: [5, 10]
+    min_samples_split: [2, 5]
